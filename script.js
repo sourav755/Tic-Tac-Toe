@@ -4,6 +4,8 @@ let winnerText = document.querySelector(".winnerText");
 
 let count = 0;
 
+let winner = "";
+
 let winPatterns = [
   [0, 1, 2],
   [0, 3, 6],
@@ -24,6 +26,11 @@ const disableBoxes = () => {
   });
 };
 
+const declareDraw = () => {
+  disableBoxes();
+  winnerText.innerText = "GAME DRAW";
+};
+
 const checkWinner = () => {
   for (let pattern of winPatterns) {
     let pos1val = boxes[pattern[0]].innerText;
@@ -32,17 +39,15 @@ const checkWinner = () => {
 
     if (pos1val != "" && pos2val != "" && pos3val != "") {
       if (pos1val === pos2val && pos2val === pos3val) {
-        console.log("Winner ", pos1val);
+        winner = pos1val;
+        console.log("Winner ", winner);
 
         disableBoxes();
 
         // Winner print
-        winnerText.innerText = "Winner: " + pos1val;
-      } else {
-        // if (count == 9) {
-        //   disableBoxes();
-        //   winnerText.innerText = "GAME DRAW";
-        // }
+        winnerText.innerText = "Congratulations, Winner is " + winner;
+
+        return true;
       }
     }
   }
@@ -61,7 +66,11 @@ boxes.forEach((box) => {
     box.disabled = true;
 
     count++;
-    checkWinner();
+    let isWinner = checkWinner();
+
+    if (count === 9 && !isWinner) {
+      declareDraw();
+    }
   });
 });
 
